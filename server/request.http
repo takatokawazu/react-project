@@ -1,0 +1,62 @@
+###
+
+GET http://localhost:8080/api/campgrounds
+
+### 
+POST http://localhost:8080/api/campgrounds
+content-type: application/json
+
+{
+  "title": "",
+  "image": "fd",
+  "price": 899,
+  "description": "爽やか1",
+  "location": "東京"
+}
+
+###
+GET http://localhost:8080/api/campgrounds/64b247871e970c7cc33e67ed
+
+### 
+PUT http://localhost:8080/api/campgrounds/64b247871e970c7cc33e67ed/edit
+content-type: application/json
+
+{
+ "title": "潮騒",
+  "image": "芥川",
+  "price": 5,
+  "description": "爽やか1",
+  "location": "大阪"
+}
+
+### 
+DELETE http://localhost:8080/api/campgrounds/64b2008f4bd857674cfb94eb
+
+###
+POST http://localhost:8080/api/reviews/64b110a31d5565b320e94654/
+content-type: application/json
+
+{
+ "body": "1",
+ "rating": 6
+}
+
+###
+POST http://localhost:8080/api/auth/register
+content-type: application/json
+
+{
+ "username": "aka",
+ "email": "exame@gmai.com",
+ "password": "taka"
+}
+
+###
+POST http://localhost:8080/api/auth/login
+
+content-type: application/json
+
+{
+ "username": "aka",
+ "password": "taka"
+}
