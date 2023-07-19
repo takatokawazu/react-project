@@ -39,7 +39,7 @@ const Edit = () => {
     }
     try {
       const response = await api.put(`/campgrounds/${id}/edit`, formData);
-      navigate(`/campgrounds/${response.id}`);
+      navigate(`/campgrounds/${id}`);
       toast.success('編集が成功しました');
     } catch (error) {
       const { response } = error;

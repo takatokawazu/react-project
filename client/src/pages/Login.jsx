@@ -1,59 +1,40 @@
 import React, { useState, useContext, useRef } from 'react';
 import Form from 'react-bootstrap/Form';
-import api from '../apiConfig';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { loginCall } from '../actionCalls';
 import { AuthContext } from '../state/AuthContext';
+import { useLocation } from 'react-router-dom';
 
 const Login = () => {
   const [validated, setValidated] = useState(false);
   const username = useRef();
   const password = useRef();
-  console.log(username.current);
-  console.log(password);
-  const { user, isFetcing, error, dispatch } = useContext(AuthContext);
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
+  const location = useLocation();
+  const { state } = location;
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    loginCall(
-      {
-        username: username.current.value,
-        password: password.current.value,
-      },
-      dispatch
-    );
+    const loginData = {
+      username: username.current.value,
+      password: password.current.value,
+    };
+
+    const currentUser = await loginCall(loginData, dispatch);
+    if (currentUser) {
+      if (state) {
+        navigate(state);
+      } else {
+        navigate('/campgrounds');
+      }
+      toast.success('ログイン成功しました。');
+    } else {
+      toast.error('ログイン失敗しました。');
+      navigate('/login');
+    }
   };
 
-  console.log(user);
-  // const navigate = useNavigate();
-  // const [formData, setFormData] = useState({});
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   const form = event.currentTarget;
-  //   if (form.checkValidity() === false) {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //     setValidated(true);
-  //     return;
-  //   }
-
-  //   try {
-  //     const { data } = await api.post('/auth/login', formData);
-  //     const msg = data.msg;
-  //     navigate(`/campgrounds`);
-  //     toast.success(msg);
-  //   } catch (e) {
-  //     setFormData({});
-  //     navigate('/login');
-  //     toast.error('パスワードまたはユーザー名が間違っています。');
-  //   }
-  // };
-  // const handleInputChange = (event) => {
-  //   setFormData({
-  //     ...formData,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
   return (
     <div className="mt-5 row">
       <h1 className="text-center">ログイン</h1>

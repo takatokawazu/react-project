@@ -11,6 +11,7 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = (req, res) => {
+  console.log(req.path, req.originalUrl);
   const user = new User({ username: req.body.username });
   res.status(202).json(user);
 };
