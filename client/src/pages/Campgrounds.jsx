@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
+import '../styles/stars.css';
 
 const Campgrounds = () => {
   const navigate = useNavigate();

@@ -1,10 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import Form from 'react-bootstrap/Form';
 import api from '../apiConfig';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { loginCall } from '../actionCalls';
+import { AuthContext } from '../state/AuthContext';
 
 const Register = () => {
+  const { dispatch } = useContext(AuthContext); // AuthContextからdispatchを取得
   const username = useRef();
   const email = useRef();
   const password = useRef();
@@ -26,7 +29,8 @@ const Register = () => {
         email: email.current.value,
         password: password.current.value,
       };
-      const response = await api.post('/auth/register', user);
+      await api.post('/auth/register', user);
+      await loginCall(user, dispatch);
       navigate(`/campgrounds`);
       toast.success('新規登録が成功しました');
     } catch (e) {

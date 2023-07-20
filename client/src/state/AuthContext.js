@@ -1,5 +1,6 @@
 import { createContext, useEffect, useReducer } from 'react';
 import AuthReducer from './AuthReducer';
+import { Logout } from './AuthActions';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -11,7 +12,11 @@ export const AuthContext = createContext(initialState);
 
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
-  console.log(state);
+
+  const logout = () => {
+    dispatch(Logout()); // LOGOUTアクションをディスパッチ
+  };
+
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify(state.user));
   }, [state.user]);
@@ -22,6 +27,7 @@ export const AuthContextProvider = ({ children }) => {
         isFetcing: state.isFetcing,
         error: state.error,
         dispatch,
+        logout,
       }}
     >
       {children}

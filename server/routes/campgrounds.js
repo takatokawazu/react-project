@@ -9,34 +9,33 @@ const {
   getCampById,
 } = require('../controllers/campground');
 
-router.get('/', requestErrorHandler(getAllCamps));
+router
+  .route('/')
+  .get(requestErrorHandler(getAllCamps))
+  .post(
+    body('title').notEmpty().withMessage('タイトルを入力してください。'),
+    body('image').notEmpty(),
+    body('price').notEmpty().isInt(),
+    body('description').notEmpty(),
+    body('location').notEmpty(),
+    requestErrorHandler(registerCamp)
+  );
 
-router.delete('/:id', requestErrorHandler(deleteCamp));
-
-router.get('/:id', requestErrorHandler(getCampById));
-
-router.post(
-  '/',
-  body('title').notEmpty().withMessage('タイトルを入力してください。'),
-  body('image').notEmpty(),
-  body('price').notEmpty().isInt(),
-  body('description').notEmpty(),
-  body('location').notEmpty(),
-  requestErrorHandler(registerCamp)
-);
-
-router.put(
-  '/:id/edit',
-  body('title')
-    .optional()
-    .notEmpty()
-    .withMessage('タイトルを入力してください。'),
-  body('image').optional().notEmpty(),
-  body('price').optional().notEmpty().isInt(),
-  body('description').optional().notEmpty(),
-  body('location').optional().notEmpty(),
-  requestErrorHandler(updateCamp)
-);
+router
+  .route('/:id')
+  .get(requestErrorHandler(getCampById))
+  .delete(requestErrorHandler(deleteCamp))
+  .put(
+    body('title')
+      .optional()
+      .notEmpty()
+      .withMessage('タイトルを入力してください。'),
+    body('image').optional().notEmpty(),
+    body('price').optional().notEmpty().isInt(),
+    body('description').optional().notEmpty(),
+    body('location').optional().notEmpty(),
+    requestErrorHandler(updateCamp)
+  );
 
 router.use((err, req, res, next) => {
   res.status(500).json('問題が起きました。');
