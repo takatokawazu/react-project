@@ -10,6 +10,7 @@ const Login = () => {
   const [validated, setValidated] = useState(false);
   const username = useRef();
   const password = useRef();
+  const email = useRef();
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
   const location = useLocation();
@@ -18,6 +19,7 @@ const Login = () => {
     e.preventDefault();
     const loginData = {
       username: username.current.value,
+      email: email.current.value,
       password: password.current.value,
     };
 
@@ -53,6 +55,19 @@ const Login = () => {
               type="username"
               id="username"
               ref={username}
+              required
+            />
+            <Form.Control.Feedback>OK!</Form.Control.Feedback>
+          </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="email">
+              メールアドレス
+            </label>
+            <input
+              className="form-control"
+              type="email"
+              id="email"
+              ref={email}
               required
             />
             <Form.Control.Feedback>OK!</Form.Control.Feedback>

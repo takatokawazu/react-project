@@ -1,24 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import api from '../apiConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { toast } from 'react-hot-toast';
+import { AuthContext } from '../state/AuthContext';
 
 const Edit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
+  const userEmail = user.email;
   const [formData, setFormData] = useState({});
   const [validated, setValidated] = useState(false);
-
   useEffect(() => {
     const getTitle = async () => {
       const res = await api.get(`/campgrounds/${id}`);
       setFormData(res.data);
+      const { email } = res.data.author;
+      if (userEmail !== email) {
+        navigate('/campgrounds');
+        toast.error('編集できません。');
+        return;
+      }
     };
     getTitle();
-  }, [id]);
+  }, []);
 
   const handleInputChange = (event) => {
     setFormData({
@@ -38,12 +46,16 @@ const Edit = () => {
       return;
     }
     try {
-      const response = await api.put(`/campgrounds/${id}/edit`, formData);
+      const response = await api.put(
+        `/campgrounds/${id}?email=${userEmail}`,
+        formData
+      );
       navigate(`/campgrounds/${id}`);
       toast.success('編集が成功しました');
     } catch (error) {
+      console.log(error);
       const { response } = error;
-      const err = response.data[0].msg;
+      const err = response.data;
       navigate('/campgrounds/error', {
         state: { message: err, status: response.status },
       });

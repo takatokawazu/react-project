@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import api from '../apiConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { toast } from 'react-hot-toast';
+import { AuthContext } from '../state/AuthContext';
 
 const NewCamp = () => {
+  const { user } = useContext(AuthContext);
+  const userEmail = user.email;
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [validated, setValidated] = useState(false);
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      const response = await api.get(`/auth?email=${userEmail}`);
+      setUserId(response.data._id);
+    } catch (error) {
+      console.log(error);
+      // navigate('/campgrounds/error', {
+      //   state: { message: "エラーが発生しました", status: response.status },
+      // });
+    }
+  };
 
   const handleInputChange = (event) => {
     setFormData({
@@ -29,15 +49,17 @@ const NewCamp = () => {
     }
 
     try {
+      formData.author = userId;
       const response = await api.post('/campgrounds', formData);
       navigate(`/campgrounds/${response.data._id}`);
       toast.success('新規登録が成功しました');
     } catch (e) {
-      const { response } = e;
-      const err = response.data[0].msg;
-      navigate('/campgrounds/error', {
-        state: { message: err, status: response.status },
-      });
+      // const { response } = e;
+      // const err = response.data[0].msg;
+      // navigate('/campgrounds/error', {
+      //   state: { message: err, status: response.status },
+      // });
+      console.log(e);
       toast.error('新規登録が失敗しました');
     }
   };

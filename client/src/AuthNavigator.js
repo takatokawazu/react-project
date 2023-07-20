@@ -13,7 +13,6 @@ import { AuthContext } from './state/AuthContext';
 const AuthNavigator = () => {
   const { user } = useContext(AuthContext);
   const { pathname } = useLocation();
-  console.log(pathname);
   return (
     <Routes>
       <Route path={`/`} element={<Home />} />

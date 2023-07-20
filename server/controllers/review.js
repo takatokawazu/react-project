@@ -10,6 +10,9 @@ const registerReview = async (req, res) => {
 
   const campground = await Campground.findById(req.params.id);
   const review = new Review(req.body);
+  if (!review.author) {
+    return res.status(400).json({ msg: 'ログインしてください。' });
+  }
   campground.reviews.push(review);
   await review.save();
   await campground.save();
@@ -18,8 +21,21 @@ const registerReview = async (req, res) => {
 
 const deleteReview = async (req, res) => {
   const { id, reviewId } = req.params;
-  await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-  await Review.findByIdAndDelete(reviewId);
+  const { username } = req.body;
+  console.log(req.body);
+  const review = await Review.findById(reviewId);
+  // console.log(review.author);
+  console.log(username);
+
+  try {
+    if (review.author === username) {
+      await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+      await Review.findByIdAndDelete(reviewId);
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json(e);
+  }
 };
 
 module.exports = { registerReview, deleteReview };

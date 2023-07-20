@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
-const { registerUser, loginUser } = require('../controllers/user');
+const { registerUser, loginUser, getByEmail } = require('../controllers/user');
 
 router.post('/register', registerUser);
 
@@ -12,5 +12,7 @@ router.post(
   }),
   loginUser
 );
+
+router.get('/', getByEmail);
 
 module.exports = router;

@@ -11,9 +11,18 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = (req, res) => {
-  console.log(req.path, req.originalUrl);
-  const user = new User({ username: req.body.username });
+  const user = new User({ username: req.body.username, email: req.body.email });
   res.status(202).json(user);
 };
 
-module.exports = { registerUser, loginUser };
+const getByEmail = async (req, res) => {
+  try {
+    const email = req.query.email; // クエリパラメータを取得する場合
+    const user = await User.findOne({ email });
+    return res.status(201).json(user);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+module.exports = { registerUser, loginUser, getByEmail };

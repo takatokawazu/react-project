@@ -7,8 +7,8 @@ POST http://localhost:8080/api/campgrounds
 content-type: application/json
 
 {
-  "title": "",
-  "image": "fd",
+  "title": "fdasfasf",
+  "image": "fdafsa",
   "price": 899,
   "description": "爽やか1",
   "location": "東京"
@@ -38,7 +38,7 @@ content-type: application/json
 
 {
  "body": "1",
- "rating": 6
+ "rating": 2
 }
 
 ###
@@ -59,4 +59,24 @@ content-type: application/json
 {
  "username": "aka",
  "password": "taka"
+}
+
+###
+
+GET http://localhost:8080/api/auth
+
+content-type: application/json
+
+{
+ "email": "hana@gmail.com",
+}
+
+###
+
+DELETE http://localhost:8080/api/reviews/64b912e32b4cb0c8dc595f3b
+
+content-type: application/json
+
+{
+ "email": "hana@gmail.com",
 }
