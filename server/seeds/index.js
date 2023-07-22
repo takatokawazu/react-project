@@ -22,10 +22,19 @@ const seedDB = async () => {
       author: '64b66040aae0493dcdd2cce2',
       location: `${cities[randomCityIndex].prefecture}${cities[randomCityIndex].city}`,
       title: `${sample(descriptors)}・${sample(places)}`,
-      image: 'http://source.unsplash.com/collection/483251',
       description:
         'つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。',
       price,
+      image: [
+        {
+          path: 'https://res.cloudinary.com/ddgt8knuy/image/upload/v1689943777/Yelp/mwfl4lnysijtue2blfyv.jpg',
+          filename: 'Yelp/mwfl4lnysijtue2blfyv',
+        },
+        {
+          path: 'https://res.cloudinary.com/ddgt8knuy/image/upload/v1689944849/Yelp/xzjtn5fmenogtqthk0oo.jpg',
+          filename: 'Yelp/xzjtn5fmenogtqthk0oo',
+        },
+      ],
     });
     camp.save();
   }

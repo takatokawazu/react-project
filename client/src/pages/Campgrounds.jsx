@@ -33,13 +33,13 @@ const Campgrounds = () => {
         <Link to="/campgrounds/new">新規登録</Link>
       </div>
       {campgrounds.map((campground) => (
-        <Container className="mb-5" key={campground.id}>
+        <Container className="mb-5" key={campground._id}>
           <Card>
             <Row>
               <Col>
                 <Card.Img
                   className="img-fruid"
-                  src={`${campground.image}`}
+                  src={`${campground.image[0].path}`}
                   style={{ width: '100%' }}
                 />
               </Col>

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { toast } from 'react-hot-toast';
+import Image from 'react-bootstrap/Image';
 import { AuthContext } from '../state/AuthContext';
 
 const Edit = () => {
@@ -14,10 +15,12 @@ const Edit = () => {
   const userEmail = user.email;
   const [formData, setFormData] = useState({});
   const [validated, setValidated] = useState(false);
+  const [files, setFiles] = useState(null);
   useEffect(() => {
     const getTitle = async () => {
       const res = await api.get(`/campgrounds/${id}`);
       setFormData(res.data);
+      setFiles(res.data.image);
       const { email } = res.data.author;
       if (userEmail !== email) {
         navigate('/campgrounds');
@@ -29,10 +32,46 @@ const Edit = () => {
   }, []);
 
   const handleInputChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value, type, checked } = event.target;
+
+    // if (type === 'checkbox') {
+    //   setFormData((prevFormData) => {
+    //     console.log(prevFormData);
+
+    //     return {
+    //       ...prevFormData,
+    //     };
+    //   });
+    // } else {
+    //   setFormData({
+    //     ...formData,
+    //     [name]: value,
+    //   });
+    // }
+    if (type === 'checkbox') {
+      setFormData((prevFormData) => {
+        const updatedImageArray = prevFormData.image.map((img) => {
+          // If the checkbox's value matches the image filename, update the checked property.
+          if (img.filename === value) {
+            return {
+              ...img,
+              checked: checked,
+            };
+          }
+          return img;
+        });
+
+        return {
+          ...prevFormData,
+          image: updatedImageArray,
+        };
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -45,7 +84,28 @@ const Edit = () => {
       setValidated(true);
       return;
     }
+
+    let imageUrls = [];
+    if (files) {
+      const data = new FormData();
+      for (let file of files) {
+        console.log(file);
+        data.append('files', file);
+      }
+      try {
+        // Assume this API endpoint will upload the file and return a URL or ID.
+        const response = await api.post('/uploads', data);
+        imageUrls = response.data;
+        console.log(imageUrls);
+      } catch (e) {
+        console.log(e);
+        toast.error('画像のアップロードに失敗しました');
+        return;
+      }
+    }
+
     try {
+      formData.image = imageUrls;
       const response = await api.put(
         `/campgrounds/${id}?email=${userEmail}`,
         formData
@@ -55,13 +115,16 @@ const Edit = () => {
     } catch (error) {
       console.log(error);
       const { response } = error;
-      const err = response.data;
-      navigate('/campgrounds/error', {
-        state: { message: err, status: response.status },
-      });
+      // const err = response.data;
+      // navigate('/campgrounds/error', {
+      //   state: { message: err, status: response.status },
+      // });
       toast.error('編集が失敗しました');
     }
   };
+
+  console.log(formData);
+
   return (
     <div className="mt-5 row">
       <h1 className="text-center">キャンプ場の編集</h1>
@@ -92,21 +155,6 @@ const Edit = () => {
               name="location"
               id="location"
               value={formData.location || ''}
-              onChange={handleInputChange}
-              required
-            />
-            <Form.Control.Feedback>OK!</Form.Control.Feedback>
-          </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="image">
-              画像URL
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              name="image"
-              id="image"
-              value={formData.image || ''}
               onChange={handleInputChange}
               required
             />
@@ -145,6 +193,31 @@ const Edit = () => {
               required
             ></textarea>
             <Form.Control.Feedback>OK!</Form.Control.Feedback>
+          </div>
+          <Form.Group controlId="formFileMultiple" className="mb-3">
+            <Form.Label>画像の追加アップロード</Form.Label>
+            <Form.Control
+              type="file"
+              multiple
+              onChange={(e) => setFiles(e.target.files)}
+            />
+          </Form.Group>
+          <div className="mb-3">
+            {formData.image &&
+              formData.image.map((img, i) => (
+                <>
+                  <Image src={img.path} alt="" thumbnail />
+                  <div className="form-check-inline">
+                    <input
+                      type="checkbox"
+                      id={`image${i}`}
+                      onChange={handleInputChange}
+                      value={img.filename}
+                    />
+                  </div>
+                  <label htmlFor={`image${i}`}>削除する</label>
+                </>
+              ))}
           </div>
           <div className="mb-3">
             <button className="btn btn-info" type="submit">

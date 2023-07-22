@@ -13,6 +13,7 @@ const NewCamp = () => {
   const [formData, setFormData] = useState({});
   const [validated, setValidated] = useState(false);
   const [error, setError] = useState('');
+  const [files, setFiles] = useState(null);
   const [userId, setUserId] = useState('');
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const NewCamp = () => {
     } catch (error) {
       console.log(error);
       // navigate('/campgrounds/error', {
-      //   state: { message: "エラーが発生しました", status: response.status },
+      //   state: { message: 'エラーが発生しました', status: response.status },
       // });
     }
   };
@@ -47,9 +48,27 @@ const NewCamp = () => {
       setValidated(true);
       return;
     }
+    let imageUrls = [];
+    if (files) {
+      const data = new FormData();
+      for (let file of files) {
+        data.append('files', file);
+      }
+      try {
+        // Assume this API endpoint will upload the file and return a URL or ID.
+        const response = await api.post('/uploads', data);
+        imageUrls = response.data;
+        console.log(imageUrls);
+      } catch (e) {
+        console.log(e);
+        toast.error('画像のアップロードに失敗しました');
+        return;
+      }
+    }
 
     try {
       formData.author = userId;
+      formData.image = imageUrls;
       const response = await api.post('/campgrounds', formData);
       navigate(`/campgrounds/${response.data._id}`);
       toast.success('新規登録が成功しました');
@@ -98,20 +117,7 @@ const NewCamp = () => {
             />
             <Form.Control.Feedback>OK!</Form.Control.Feedback>
           </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="image">
-              画像URL
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              name="image"
-              id="image"
-              onChange={handleInputChange}
-              required
-            />
-            <Form.Control.Feedback>OK!</Form.Control.Feedback>
-          </div>
+
           <div className="mb-3">
             <label className="form-label" htmlFor="price">
               価格
@@ -145,6 +151,18 @@ const NewCamp = () => {
               onChange={handleInputChange}
               required
             ></textarea>
+            <Form.Control.Feedback>OK!</Form.Control.Feedback>
+          </div>
+          <div className="mb-3">
+            <Form.Group controlId="formFileMultiple" className="mb-3">
+              <Form.Label>画像のアップロード</Form.Label>
+              <Form.Control
+                type="file"
+                multiple
+                onChange={(e) => setFiles(e.target.files)}
+                required
+              />
+            </Form.Group>
             <Form.Control.Feedback>OK!</Form.Control.Feedback>
           </div>
           <div className="mb-3">
