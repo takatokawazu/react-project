@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -9,8 +13,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
-const env = require('dotenv');
-env.config();
+const uploadRoute = require('./routes/uploads.js');
 const PORT = 8080;
 
 const cors = require('cors');
@@ -44,6 +47,7 @@ app.use((req, res, next) => {
 app.use('/api/campgrounds', campgroundRoute);
 app.use('/api/reviews', reviewRoute);
 app.use('/api/auth', userRoute);
+app.use('/api/uploads', uploadRoute);
 
 mongoose
   .connect(process.env.MONGODB_URL)

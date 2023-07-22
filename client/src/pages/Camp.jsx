@@ -6,6 +6,8 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { toast } from 'react-hot-toast';
 import { AuthContext } from '../state/AuthContext';
+import Carousel from 'react-bootstrap/Carousel';
+
 import '../styles/stars.css';
 
 const Camp = () => {
@@ -99,7 +101,20 @@ const Camp = () => {
     <div className="row mt-5">
       <div className="col-6">
         <Card className="mb-3">
-          <Card.Img variant="top" src={`${campground.image}`} />
+          <Carousel>
+            {campground.image &&
+              campground.image.map((img) => (
+                <Carousel.Item key={img.filename}>
+                  <div>
+                    <Card.Img
+                      variant="top"
+                      src={`${img.path}`}
+                      className="d-block w-100"
+                    />
+                  </div>
+                </Carousel.Item>
+              ))}
+          </Carousel>
           <Card.Body>
             <Card.Title>{campground.title}</Card.Title>
             <Card.Text>{campground.description}</Card.Text>
@@ -153,7 +168,7 @@ const Camp = () => {
                     onChange={handleInputChange}
                     checked={formData.rating == '1'} // ratingの値に応じてチェック状態を制御
                   />
-                  <label for="first-rate1" title="1">
+                  <label htmlFor="first-rate1" title="1">
                     評価1
                   </label>
                   <input
@@ -163,7 +178,7 @@ const Camp = () => {
                     value="2"
                     onChange={handleInputChange}
                   />
-                  <label for="first-rate2" title="2">
+                  <label htmlFor="first-rate2" title="2">
                     評価2
                   </label>
                   <input
@@ -173,7 +188,7 @@ const Camp = () => {
                     value="3"
                     onChange={handleInputChange}
                   />
-                  <label for="first-rate3" title="3">
+                  <label htmlFor="first-rate3" title="3">
                     評価3
                   </label>
                   <input
@@ -183,7 +198,7 @@ const Camp = () => {
                     value="4"
                     onChange={handleInputChange}
                   />
-                  <label for="first-rate4" title="4">
+                  <label htmlFor="first-rate4" title="4">
                     評価4
                   </label>
                   <input
@@ -193,7 +208,7 @@ const Camp = () => {
                     value="5"
                     onChange={handleInputChange}
                   />
-                  <label for="first-rate5" title="5">
+                  <label htmlFor="first-rate5" title="5">
                     評価5
                   </label>
                 </fieldset>
