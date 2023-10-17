@@ -14,7 +14,7 @@ export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
 
   const logout = () => {
-    dispatch(Logout()); // LOGOUTアクションをディスパッチ
+    dispatch(Logout());
   };
 
   useEffect(() => {

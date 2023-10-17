@@ -7,12 +7,10 @@ const App = () => {
     <div className="d-flex flex-column vh-100">
       <BrowserRouter>
         <Navi />
-        <div className="container">
-          <AuthNavigator />
-        </div>
+        <AuthNavigator />
       </BrowserRouter>
-      <footer className="blockquote-footer bg-dark py-3 mt-auto">
-        &copy; Yelp 2023
+      <footer className="blockquote-footer mb-0 bg-dark py-3 mt-auto">
+        &copy; CampApp 2023
       </footer>
     </div>
   );
