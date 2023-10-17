@@ -18,7 +18,7 @@ const Navi = () => {
   return (
     <Navbar sticky="top" bg="dark" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand href="/">Yelp</Navbar.Brand>
+        <Navbar.Brand href="/">CampApp</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="/">ホーム</Nav.Link>
           <Nav.Link href="/campgrounds">キャンプ場</Nav.Link>
